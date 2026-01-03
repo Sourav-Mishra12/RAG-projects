@@ -14,6 +14,7 @@ from vector_store.client import client
 from qdrant_client.models import PointStruct
 from retrieval.retriever import retrieve
 import time 
+from observability.metrics import QueryMetrics
 
 
 PDF_PATH = "data/raw/sample_rag_test_document.pdf"
@@ -49,17 +50,19 @@ client.upsert(
 print("Baseline vector store with BGE is ready !!!!")
 
 
-query = "What is vector quantization ? "
+query = "What is vector quantization?"
+
+metrics = QueryMetrics(query=query)
 
 start = time.time()
 
-retrieved_chunks = retrieve(query,top_k=5)
+retrieved_chunks = retrieve(query, metrics, top_k=5)
 
-total_latency = (time.time() - start)* 1000
+metrics.total_latency_ms = (time.time() - start) * 1000
 
-print("---- Retrieved Context ----")
-for i , chunk in enumerate (retrieved_chunks):
-    print(f"[{i+1}] {chunk['text'][:200]}....\n")
+print("\n---- Retrieved Context ----")
+for i, chunk in enumerate(retrieved_chunks):
+    print(f"[{i+1}] {chunk['text'][:200]}...\n")
 
-print(f"Total latency : {total_latency:.2f}ms")
-print(f"Chunks Retrieved: {len(retrieved_chunks)}")
+print("\n--- Metrics ---")
+print(metrics.to_dict())
