@@ -1,3 +1,11 @@
+import sys
+import os
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+
 from ingestion.pdf_loader import load_pdf
 from ingestion.chunker import chunk_text
 from ingestion.embedder import embed_documents
@@ -8,7 +16,7 @@ from retrieval.retriever import retrieve
 import time 
 
 
-PDF_PATH = "data/raw_pdfs/sample.pdf"
+PDF_PATH = "data/raw/sample_rag_test_document.pdf"
 
 # loading & chunking 
 pages = load_pdf(PDF_PATH)

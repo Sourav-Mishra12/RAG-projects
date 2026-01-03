@@ -1,5 +1,5 @@
 import tiktoken
-from logging import logger
+from observability.logger import logger
 
 # performing tokenized chuning for better baseline , not doing normal chunking
 

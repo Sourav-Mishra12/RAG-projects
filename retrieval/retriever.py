@@ -1,7 +1,7 @@
 import time 
 from ingestion.embedder import embed_query
 from vector_store.client import client 
-from logging import logger 
+from observability.logger import logger 
 
 COLLECTION_NAME = "baseline_chunks"
 

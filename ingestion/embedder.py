@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer
-from logging import logger
+from observability.logger import logger
 
 model = SentenceTransformer(
     "BAAI/bge-small-en-v1.5",

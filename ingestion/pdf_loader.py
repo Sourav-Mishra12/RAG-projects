@@ -1,5 +1,5 @@
 from pypdf import PdfReader
-from logging import logger 
+from observability.logger import logger 
 
 def load_pdf(path : str) -> list[str]:
     reader = PdfReader(path)
