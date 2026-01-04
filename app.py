@@ -15,6 +15,7 @@ from qdrant_client.models import PointStruct
 from retrieval.retriever import retrieve
 import time 
 from observability.metrics import QueryMetrics
+from observability.query_signals import extract_query_signals
 
 
 PDF_PATH = "data/raw/sample_rag_test_document.pdf"
@@ -67,3 +68,7 @@ for i, chunk in enumerate(retrieved_chunks):
 print("\n--- Metrics ---")
 print(metrics.to_dict())
 
+signals = extract_query_signals(query)
+
+print("\n ----QUERY SIGNALS----")
+print(signals)
