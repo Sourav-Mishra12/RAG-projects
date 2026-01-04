@@ -66,3 +66,4 @@ for i, chunk in enumerate(retrieved_chunks):
 
 print("\n--- Metrics ---")
 print(metrics.to_dict())
+
