@@ -15,6 +15,7 @@ from qdrant_client.models import PointStruct
 from retrieval.retriever import retrieve
 import time 
 from observability.metrics import QueryMetrics
+from observability.decision_policy import decide_top_k
 from observability.query_signals import extract_query_signals
 
 
@@ -53,12 +54,22 @@ print("Baseline vector store with BGE is ready !!!!")
 
 query = "What is vector quantization?"
 
+signals = extract_query_signals(query)
+
+print("\n ----QUERY SIGNALS----")
+print(signals)
+
 metrics = QueryMetrics(query=query)
 
+top_k = decide_top_k(signals)
+
+print("\n--- Decision ---")
+print(f"Intent: {signals.intent}")
+print(f"Word count: {signals.word_count}")
+print(f"Chosen top_k: {top_k}")
+
 start = time.time()
-
-retrieved_chunks = retrieve(query, metrics, top_k=5)
-
+retrieved_chunks = retrieve(query, metrics, top_k=top_k)
 metrics.total_latency_ms = (time.time() - start) * 1000
 
 print("\n---- Retrieved Context ----")
@@ -67,8 +78,3 @@ for i, chunk in enumerate(retrieved_chunks):
 
 print("\n--- Metrics ---")
 print(metrics.to_dict())
-
-signals = extract_query_signals(query)
-
-print("\n ----QUERY SIGNALS----")
-print(signals)
