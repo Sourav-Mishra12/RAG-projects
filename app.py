@@ -17,7 +17,7 @@ import time
 from observability.metrics import QueryMetrics
 from observability.decision_policy import decide_top_k
 from observability.query_signals import extract_query_signals
-
+from observability.experiments import log_experiment
 
 PDF_PATH = "data/raw/sample_rag_test_document.pdf"
 
@@ -71,6 +71,17 @@ print(f"Chosen top_k: {top_k}")
 start = time.time()
 retrieved_chunks = retrieve(query, metrics, top_k=top_k)
 metrics.total_latency_ms = (time.time() - start) * 1000
+
+log_experiment(
+    query=query,
+    intent=signals.intent,
+    word_count=signals.word_count,
+    top_k=top_k,
+    chunks_retrieved=metrics.chunks_retrieved,
+    total_latency_ms=metrics.total_latency_ms
+)
+
+
 
 print("\n---- Retrieved Context ----")
 for i, chunk in enumerate(retrieved_chunks):
