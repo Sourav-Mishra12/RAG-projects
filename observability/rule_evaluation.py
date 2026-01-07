@@ -36,3 +36,4 @@ def evaluate_rules() -> Dict[str, dict]:
         }
 
     return results
+
