@@ -13,7 +13,8 @@ def evaluate_rules() -> Dict[str, dict]:
     stats = defaultdict(lambda: {
         "count": 0,
         "total_latency_ms": 0.0,
-        "total_chunks": 0
+        "total_chunks": 0,
+        "queries" : []
     })
 
     with open(EXPERIMENT_LOG_PATH, "r", encoding="utf-8") as f:
@@ -24,6 +25,7 @@ def evaluate_rules() -> Dict[str, dict]:
             stats[intent]["count"] += 1
             stats[intent]["total_latency_ms"] += record["total_latency_ms"]
             stats[intent]["total_chunks"] += record["chunks_retrieved"]
+            stats[intent]["queries"].append(record["query"])
 
     # Compute averages
     results = {}
@@ -32,7 +34,8 @@ def evaluate_rules() -> Dict[str, dict]:
         results[intent] = {
             "runs": data["count"],
             "avg_latency_ms": data["total_latency_ms"] / data["count"],
-            "avg_chunks": data["total_chunks"] / data["count"]
+            "avg_chunks": data["total_chunks"] / data["count"],
+            "queries": data["queries"] 
         }
 
     return results
