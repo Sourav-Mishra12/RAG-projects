@@ -14,3 +14,5 @@ for intent, stats in results.items():
     print("Queries:")
     for q in stats["queries"]:
         print(f"  - {q}")
+
+
