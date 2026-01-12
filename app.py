@@ -52,7 +52,7 @@ client.upsert(
 print("Baseline vector store with BGE is ready !!!!")
 
 
-query = "compare BGE vs E5 embeddings"
+query = "define embeddings"
 
 signals = extract_query_signals(query)
 
