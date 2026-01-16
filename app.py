@@ -18,6 +18,9 @@ from observability.metrics import QueryMetrics
 from observability.decision_policy import decide_top_k
 from observability.query_signals import extract_query_signals
 from observability.experiments import log_experiment
+from observability.retrieval_strategy import decide_retrieval_strategy
+
+
 
 PDF_PATH = "data/raw/sample_rag_test_document.pdf"
 
@@ -60,8 +63,19 @@ print("\n ----QUERY SIGNALS----")
 print(signals)
 
 metrics = QueryMetrics(query=query)
+strategy = decide_retrieval_strategy(signals)
+base_top_k = decide_top_k(signals)
 
-top_k = decide_top_k(signals)
+if strategy == "FAST":
+    top_k = max(3 ,base_top_k , -1)
+
+elif strategy == "BALANCED":
+    top_k = base_top_k
+
+else:
+    top_k = base_top_k  
+
+
 
 print("\n--- Decision ---")
 print(f"Intent: {signals.intent}")
