@@ -67,7 +67,7 @@ strategy = decide_retrieval_strategy(signals)
 base_top_k = decide_top_k(signals)
 
 if strategy == "FAST":
-    top_k = max(3 ,base_top_k , -1)
+    top_k = max(3 ,base_top_k -1)
 
 elif strategy == "BALANCED":
     top_k = base_top_k
@@ -84,6 +84,30 @@ print(f"Chosen top_k: {top_k}")
 
 start = time.time()
 retrieved_chunks = retrieve(query, metrics, top_k=top_k)
+
+if strategy == "DEEP" and metrics.chunks_retrieved < max(2 , base_top_k // 2):
+
+    expanded_top_k = min(8,base_top_k + 2)
+
+    print("\n ---- DEEP STRATEGY TRIGGERED ----")
+    print(f"Retrying with expanded top_k={expanded_top_k}")
+
+    more_chunks = retrieve(query,metrics,top_k=expanded_top_k)
+
+    # simple merge by text (or id)
+
+    seen = set()
+    merged = []
+    for c in retrieved_chunks + more_chunks:
+        key = c["text"]
+        if key not in seen:
+            seen.add(key)
+            merged.append(c)
+
+    retrieved_chunks = merged
+
+
+
 metrics.total_latency_ms = (time.time() - start) * 1000
 
 log_experiment(
