@@ -107,7 +107,6 @@ if strategy == "DEEP" and metrics.chunks_retrieved < max(2 , base_top_k // 2):
     retrieved_chunks = merged
 
 
-
 metrics.total_latency_ms = (time.time() - start) * 1000
 
 log_experiment(
