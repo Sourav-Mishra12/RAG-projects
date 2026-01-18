@@ -19,7 +19,7 @@ from observability.decision_policy import decide_top_k
 from observability.query_signals import extract_query_signals
 from observability.experiments import log_experiment
 from observability.retrieval_strategy import decide_retrieval_strategy
-
+from retrieval.reranker import rerank_chunks
 
 
 PDF_PATH = "data/raw/sample_rag_test_document.pdf"
@@ -105,6 +105,17 @@ if strategy == "DEEP" and metrics.chunks_retrieved < max(2 , base_top_k // 2):
             merged.append(c)
 
     retrieved_chunks = merged
+
+    print("\n ---- RERANKING (DEEP STRATEGY) ----")
+
+    reranked_chunks = rerank_chunks(
+        query=query,
+        chunks=retrieved_chunks,
+        top_n=top_k
+    )
+
+    retrieved_chunks = reranked_chunks
+    metrics.chunks_retrieved = len(retrieved_chunks)
 
 
 metrics.total_latency_ms = (time.time() - start) * 1000
